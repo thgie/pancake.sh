@@ -1,7 +1,12 @@
 #!/bin/sh
 
-INPUT_DIR="$(pwd)/"
+# adjust these
 OUTPUT_DIR="/var/www/jache.re/"
+BIBTEX_FILE="./files/jachere.bib"
+TEMPLATE_FILE="./files/template/main.html"
+
+# No editing beyond this comment
+INPUT_DIR="$(pwd)/"
 
 git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD | grep -E '.md' | while read file ; do
 
@@ -12,8 +17,8 @@ git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD | grep -E '.md' | whil
 	OUTPUT_RELATIVE=${INPUT_FILE%.*}
 
 	# render the file
-	. ./bake/render
+	. ./pancake.sh/render
 done
 
 # sync files and prepare images for hosting
-. ./bake/post-render
+. ./pancake.sh/post-render

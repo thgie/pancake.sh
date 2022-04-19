@@ -14,9 +14,9 @@ echo "rendering $OUTPUT_RELATIVE"
 
 # if file contains [@xyz] citations, apply bibtex file and cite-proc
 if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template=files/template/main.html --bibliography files/jachere.bib
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE"
 else
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template=files/template/main.html
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE"
 fi
 
 # replace the .md link to .html

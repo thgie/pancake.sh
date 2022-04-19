@@ -2,8 +2,13 @@
 # clean up old deployment
 cd ..
 
-INPUT_DIR="$(pwd)/"
+# adjust these
 OUTPUT_DIR="/var/www/jache.re/"
+BIBTEX_FILE="./files/jachere.bib"
+TEMPLATE_FILE="./files/template/main.html"
+
+# No editing beyond this comment
+INPUT_DIR="$(pwd)/"
 
 rm -rfv "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
@@ -18,8 +23,8 @@ find . -name "*.md" | while read file ; do
 	OUTPUT_RELATIVE=${OUTPUT_RELATIVE#*/}
 
 	# render the file
-	. ./bake/render
+	. ./pancake.sh/render
 done
 
 # sync files and prepare images for hosting 
-. ./bake/post-render
+. ./pancake.sh/post-render
