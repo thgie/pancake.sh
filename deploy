@@ -1,0 +1,25 @@
+#!/bin/sh
+# clean up old deployment
+cd ..
+
+INPUT_DIR="$(pwd)/"
+OUTPUT_DIR="/var/www/jache.re/"
+
+rm -rfv "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR"
+
+find . -name "*.md" | while read file ; do
+	
+	# prepare input file string
+	INPUT_FILE=${file#*/}
+
+	# prepare relative output file path w/o extension
+	OUTPUT_RELATIVE=${file%.*}
+	OUTPUT_RELATIVE=${OUTPUT_RELATIVE#*/}
+
+	# render the file
+	. ./bake/render
+done
+
+# sync files and prepare images for hosting 
+. ./bake/post-render

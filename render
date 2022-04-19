@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# prepare absolute output path with extension 
+OUTPUT_ABSOLUTE="$OUTPUT_DIR$OUTPUT_RELATIVE.html"
+
+# prepare absolute output path to containing folder to create folder if necessary
+OUTPUT_PATH="${OUTPUT_ABSOLUTE%/*}/"
+
+#echo "converting /var/repositories/jache.re/$file to $OUTPUT_ABSOLUTE"
+mkdir -p "$OUTPUT_PATH"
+
+# render html files and apply template
+echo "rendering $OUTPUT_RELATIVE"
+
+# if file contains [@xyz] citations, apply bibtex file and cite-proc
+if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template=files/template/main.html --bibliography files/jachere.bib
+else
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template=files/template/main.html
+fi
+
+# replace the .md link to .html
+sed -i -e "s/\.md/.html/g" "$OUTPUT_ABSOLUTE"
+
+# replace anchor hrefs to work with base href
+ANCHOR_RELATIVE=$(echo "$OUTPUT_RELATIVE" | sed 's;/;\\/;g')
+sed -i -e "s/href=\"#/href=\"${ANCHOR_RELATIVE}.html#/g" "$OUTPUT_ABSOLUTE"

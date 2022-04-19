@@ -1,0 +1,19 @@
+#!/bin/sh
+
+INPUT_DIR="$(pwd)/"
+OUTPUT_DIR="/var/www/jache.re/"
+
+git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD | grep -E '.md' | while read file ; do
+
+	# prepare input file string
+	INPUT_FILE="${file#\"}"
+
+	# prepare relative output file path w/o extension
+	OUTPUT_RELATIVE=${INPUT_FILE%.*}
+
+	# render the file
+	. ./bake/render
+done
+
+# sync files and prepare images for hosting
+. ./bake/post-render

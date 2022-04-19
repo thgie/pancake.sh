@@ -1,0 +1,6 @@
+#!/bin/sh
+# sync files to output dir
+rsync -avu --delete "${INPUT_DIR}files/" "${OUTPUT_DIR}files"
+
+# resize images
+find "$OUTPUT_DIR" -name '*.jpg' -o -name '*.jpeg' -o -name '*.png' -execdir mogrify -resize 820x {} +
