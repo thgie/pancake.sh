@@ -1,30 +1,48 @@
 #!/bin/sh
-# clean up old deployment
-cd ..
 
-# adjust these
-OUTPUT_DIR="/var/www/jache.re/"
-BIBTEX_FILE="./files/jachere.bib"
-TEMPLATE_FILE="./files/template/main.html"
+# setup parameters
+while getopts i:o:t:b: flag
+do
+    case "${flag}" in
+        i) INPUT_DIR=${OPTARG};;
+        o) OUTPUT_DIR=${OPTARG};;
+        t) TEMPLATE_FILE=${OPTARG};;
+        b) BIBTEXT_FILE=${OPTARG};;
+    esac
+done
+
+NOW=$(date)
+MAIN_BRANCH="master"
+DEPLAY_BRANCH="pages"
+
+. ./backup
 
 # No editing beyond this comment
-INPUT_DIR="$(pwd)/"
-
 rm -rfv "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-find . -name "*.md" | while read file ; do
-	
+find "$INPUT_DIR" -name "*.md" | while read file ; do
+
 	# prepare input file string
-	INPUT_FILE=${file#*/}
+	INPUT_FILE="${file/"$INPUT_DIR"/}"
 
 	# prepare relative output file path w/o extension
-	OUTPUT_RELATIVE=${file%.*}
-	OUTPUT_RELATIVE=${OUTPUT_RELATIVE#*/}
+	OUTPUT_RELATIVE="${file/"$INPUT_DIR"/}"
+	OUTPUT_RELATIVE=${OUTPUT_RELATIVE%.*}
+
+	echo "$OUTPUT_RELATIVE"
 
 	# render the file
-	. ./pancake.sh/render
+	. ./render
 done
 
 # sync files and prepare images for hosting 
-. ./pancake.sh/post-render
+. ./post-render
+
+# the fuck is this?
+find "$OUTPUT_DIR" -type f -name '*.html-e' -print -delete
+
+. ./commit
+
+# cleanup
+rm -rfv "$OUTPUT_DIR"

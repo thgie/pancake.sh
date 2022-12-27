@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# move generated files to "pages" branch of INPUT_DIR repository and commit
+git -C "$INPUT_DIR" switch "$MAIN_BRANCH"
+git -C "$INPUT_DIR" add .
+git -C "$INPUT_DIR" commit -m "backup $NOW"
+git -C "$INPUT_DIR" push

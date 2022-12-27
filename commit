@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# move generated files to "pages" branch of INPUT_DIR repository and commit
+git -C "$INPUT_DIR" switch "$DEPLAY_BRANCH"
+rsync -avu --delete --exclude=".*" "${OUTPUT_DIR}/" "${INPUT_DIR}/"
+git -C "$INPUT_DIR" add .
+git -C "$INPUT_DIR" commit -m "generated $NOW"
+git -C "$INPUT_DIR" push
+
+git -C "$INPUT_DIR" switch "$MAIN_BRANCH"
