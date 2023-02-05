@@ -3,4 +3,5 @@
 rsync -avu --delete "${INPUT_DIR}files/" "${OUTPUT_DIR}files"
 
 # resizes and dithers copied images
-find "$OUTPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg -o -name \*.png \) -exec mogrify -resize 640x -dither FloydSteinberg -colors 32 -format png -auto-orient {} \; -exec rm {} \;
+find "$OUTPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize 640x -dither FloydSteinberg -colors 32 -format png -auto-orient {} \; -exec rm {} \;
+find "$OUTPUT_DIR" -type f \( -name \*.png \) -exec mogrify -resize 640x -dither FloydSteinberg -colors 32 -format png -auto-orient {} \;
