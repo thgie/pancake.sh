@@ -14,6 +14,7 @@ The `deploy` command takes all the markdown files, and generates an html website
 - `-o` output directory, again, there is a trailing slash `/`
 - `-t` template file, which is used to frame the markdown content
 - `-b` bibtext file, in case you've got citations in your markdown files
+- `-u` does everything, but only with changed files since last commit, like this `-u true`
 
 ## License
 Released and distributed under the [Anti-Capitalist Attribution Cooperative License](https://noroadhome.itch.io/acaclicense).
