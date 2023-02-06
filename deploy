@@ -1,45 +1,68 @@
 #!/bin/sh
 
 # setup parameters
-while getopts i:o:t:b: flag
+UPDATE=false
+
+while getopts i:o:t:b:u: flag
 do
     case "${flag}" in
         i) INPUT_DIR=${OPTARG};;
         o) OUTPUT_DIR=${OPTARG};;
         t) TEMPLATE_FILE=${OPTARG};;
         b) BIBTEXT_FILE=${OPTARG};;
+        u) UPDATE=true;;
     esac
 done
 
 NOW=$(date)
 MAIN_BRANCH="master"
-DEPLAY_BRANCH="pages"
+DEPLOY_BRANCH="pages"
 
+# resize images, can be commented out…
+# i just don't want huge images in my repo
+echo "resizing images"
+find "$INPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize 1280x1280 -auto-orient {} \;
+
+# backup current status to main branch
+# this is important for the update action as it depends on reading the last commit
 . ./backup
 
 # No editing beyond this comment
 rm -rfv "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-find "$INPUT_DIR" -name "*.md" | while read file ; do
+if [ "$UPDATE" = true ] ; then
+	git -C "$INPUT_DIR" diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD | grep -E '.md' | while read file ; do
+		INPUT_FILE="${file#\"}"
 
-	# prepare input file string
-	INPUT_FILE="${file/"$INPUT_DIR"/}"
+		# prepare relative output file path w/o extension
+		OUTPUT_RELATIVE=${INPUT_FILE%.*}
+		echo "$OUTPUT_RELATIVE"
+		
+		# render the file
+		. ./render
+	done
+else
+	find "$INPUT_DIR" -name "*.md" | while read file ; do
 
-	# prepare relative output file path w/o extension
-	OUTPUT_RELATIVE="${file/"$INPUT_DIR"/}"
-	OUTPUT_RELATIVE=${OUTPUT_RELATIVE%.*}
+		# prepare input file string
+		INPUT_FILE="${file/"$INPUT_DIR"/}"
 
-	echo "$OUTPUT_RELATIVE"
+		# prepare relative output file path w/o extension
+		OUTPUT_RELATIVE="${file/"$INPUT_DIR"/}"
+		OUTPUT_RELATIVE=${OUTPUT_RELATIVE%.*}
+		echo "$OUTPUT_RELATIVE"
 
-	# render the file
-	. ./render
-done
+		# render the file
+		. ./render
+	done
+fi
+
 
 # sync files and prepare images for hosting 
 . ./post-render
 
-# the fuck is this?
+# TODO the fuck is this?
 find "$OUTPUT_DIR" -type f -name '*.html-e' -print -delete
 
 . ./commit
