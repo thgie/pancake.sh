@@ -20,8 +20,8 @@ DEPLOY_BRANCH="pages"
 
 # resize images, can be commented out…
 # i just don't want huge images in my repo
-echo "resizing images"
-find "$INPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize 1280x1280 -auto-orient {} \;
+# echo "resizing images"
+# find "$INPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg -o -name \*.png \) -exec mogrify -resize 1280x1280 -auto-orient {} \;
 
 # backup current status to main branch
 # this is important for the update action as it depends on reading the last commit
