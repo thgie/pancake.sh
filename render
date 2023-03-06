@@ -10,13 +10,11 @@ OUTPUT_PATH="${OUTPUT_ABSOLUTE%/*}/"
 mkdir -p "$OUTPUT_PATH"
 
 # render html files and apply template
-echo "rendering $OUTPUT_RELATIVE"
-
 # if file contains [@xyz] citations, apply bibtex file and cite-proc
 if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE"
+	pandoc --quiet "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE"
 else
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE"
+	pandoc --quiet "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE"
 fi
 
 # replace the .md link to .html
@@ -27,5 +25,5 @@ ANCHOR_RELATIVE=$(echo "$OUTPUT_RELATIVE" | sed 's;/;\\/;g')
 sed -i -e "s/href=\"#/href=\"${ANCHOR_RELATIVE}.html#/g" "$OUTPUT_ABSOLUTE"
 
 # replace all image extensions with .png
-sed -i -e "s/.jpg/.png/g" "$OUTPUT_ABSOLUTE"
-sed -i -e "s/.jpeg/.png/g" "$OUTPUT_ABSOLUTE"
+# sed -i -e "s/.jpg/.png/g" "$OUTPUT_ABSOLUTE"
+# sed -i -e "s/.jpeg/.png/g" "$OUTPUT_ABSOLUTE"
