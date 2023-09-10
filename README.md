@@ -24,6 +24,11 @@ BIBTEX_FILE: assets/bibfile.bib
 OPTIMIZE_IMAGES: true
 DITHER_COLORS: 8
 RESIZE_DIMENSIONS: 1280
+BLOG_RSS: true
+BLOG_PATH: journal
+BLOG_TITLE: Hello World
+BLOG_DESCRIPTION: Best Blog Ever
+BLOG_URL: "https://test-repository.net"
 ```
 Do not rename the variables, please.
 
@@ -35,6 +40,11 @@ Do not rename the variables, please.
 - `OPTIMIZE_IMAGES`: true/false; if you want to optimize your images. Optimization is done via dithering and resizing
 - `DITHER_COLORS`: the amount of colors an image should be reduced to
 - `RESIZE_DIMENSIONS`: the max width and height an image can have
+- `BLOG_RSS`: true/false; if you want to generate an rss feed.xml
+- `BLOG_PATH`: path to where the blog posts lie
+- `BLOG_TITLE`: …
+- `BLOG_DESCRIPTION`: …
+- `BLOG_URL`: …
 
 ## License
 Released and distributed under the [Anti-Capitalist Attribution Cooperative License](https://noroadhome.itch.io/acaclicense).

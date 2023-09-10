@@ -65,6 +65,46 @@ if [ "$OPTIMIZE_IMAGES" = true ] ; then
 	find "$OUTPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize ${RESIZE_DIMENSIONS}x -dither FloydSteinberg -colors $DITHER_COLORS -format png -auto-orient {} \; -exec rm {} \;
 fi
 
+# create rss feed
+if [ "$BLOG_RSS" = true ] ; then
+	
+	echo "creating feed xml"
+
+	FEED_FILE="${OUTPUT_DIR}feed.xml"
+	rm -fv $FEED_FILE
+	touch $FEED_FILE
+
+	echo """<?xml version='1.0' encoding='UTF-8' ?>
+	<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+	<channel>
+	<title>$BLOG_TITLE</title>
+	<link>$BLOG_URL</link>
+	<description>$BLOG_DESCRIPTION</description>
+	<atom:link href='${BLOG_URL}/feed.xml' rel='self' type='application/rss+xml' />
+	""" > $FEED_FILE
+
+	find "$INPUT_DIR$BLOG_PATH" -name "*.md" | while read file ; do
+		echo "$file"
+
+		eval $(parse_yaml $file "POST_")
+
+		POST_URL=$BLOG_URL/${file/$INPUT_DIR/}
+		POST_URL=${POST_URL/\.md/.html/}
+
+		echo """<item>
+		<title>$POST_title</title>
+        <link>$POST_URL</link>
+        <pubDate>$POST_date</pubDate>
+        <description>$POST_description</description>
+        </item>""" >> $FEED_FILE
+
+	done
+
+	echo """</channel>
+	</rss>""" >> $FEED_FILE
+
+fi
+
 # TODO the fuck is this?
 find "$OUTPUT_DIR" -type f -name '*.html-e' -delete
 
