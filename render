@@ -11,7 +11,7 @@ mkdir -p "$OUTPUT_PATH"
 
 # render html files and apply template
 # if file contains [@xyz] citations, apply bibtex file and cite-proc
-TEMPLATE_FILE="${DEFAULT_TEMPLATE_FILE}"
+TEMPLATE_FILE="${DEFAULT_TEMPLATE_FILE}.html"
 
 if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
 	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE_PATH" --citeproc

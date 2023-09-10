@@ -19,7 +19,7 @@ There is an `example-repository` for you to look at.
 MAIN_BRANCH: main
 DEPLOY_BRANCH: pages
 TEMPLATE_DIR: assets
-DEFAULT_TEMPLATE: default.html
+DEFAULT_TEMPLATE: default
 BIBTEX_FILE: assets/bibfile.bib
 OPTIMIZE_IMAGES: true
 DITHER_COLORS: 8
@@ -35,7 +35,7 @@ Do not rename the variables, please.
 - `MAIN_BRANCH` holds the markdown files
 - `DEPLOY_BRANCH` will hold the html files
 - `TEMPLATE_DIR`: where the template files lie
-- `DEFAULT_TEMPLATE`: the default template; I will add the possibility to change template via frontmatter
+- `DEFAULT_TEMPLATE`: the default template; I will add the possibility to change template via frontmatter; `.html` is added
 - `BIBTEX_FILE`: where the bibtex file is
 - `OPTIMIZE_IMAGES`: true/false; if you want to optimize your images. Optimization is done via dithering and resizing
 - `DITHER_COLORS`: the amount of colors an image should be reduced to
