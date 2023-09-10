@@ -81,6 +81,6 @@ git -C "$INPUT_DIR" switch "$MAIN_BRANCH"
 
 # cleanup
 echo "Removing temporary directory"
-# rm -rf "$OUTPUT_DIR"
+rm -rf "$OUTPUT_DIR"
 
 echo "Finished deployment"
