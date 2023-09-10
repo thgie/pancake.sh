@@ -4,17 +4,37 @@
 ## What does it do
 The provided scripts recursively renders a folder with its subfolders and markdown files to the same structure into the given folder. It then syncs the given files or assets folder and last but not least, resizes the images in the output folder. It's kind of a static site generator realised with pandoc.
 
-The `deploy` command takes all the markdown files, and generates an html website from it. It then continues to add the generated files to a specific branch of the git repository which was the input directory.
+The `bake` command takes all the markdown files, and generates an html website from it. It then continues to add the generated files to a specific branch of the git repository which was the input directory.
 
 ## Setup
 - have pandoc as well as pandoc-citeproc installed - `sudo apt install pandoc pandoc-citeproc` on something debian/ubuntu based
-- render your markdown archive into a html website through this commond `./deploy -i ../thgie.ch/ -o ../thgie-output/ -t ../thgie.ch/files/template/main.html -b ../thgie.ch/files/Zettelkasten.bib`
+- have a repository with two branches, one with the markdown files, and one which will hold the html files
+- have a `.bake` file present in said repository
+- render your markdown archive into a html website, and deploy it, through this command `./bake ../test-repository`
 
-- `-i` input directory, don't forget the trailing slash `/`
-- `-o` output directory, again, there is a trailing slash `/`
-- `-t` template file, which is used to frame the markdown content
-- `-b` bibtext file, in case you've got citations in your markdown files
-- `-u` does everything, but only with changed files since last commit, like this `-u true`
+There is an `example-repository` for you to look at.
+
+### Structure of a `.bake` file
+```
+MAIN_BRANCH: main
+DEPLOY_BRANCH: pages
+TEMPLATE_DIR: assets
+DEFAULT_TEMPLATE: default.html
+BIBTEX_FILE: assets/bibfile.bib
+OPTIMIZE_IMAGES: true
+DITHER_COLORS: 8
+RESIZE_DIMENSIONS: 1280
+```
+Do not rename the variables, please.
+
+- `MAIN_BRANCH` holds the markdown files
+- `DEPLOY_BRANCH` will hold the html files
+- `TEMPLATE_DIR`: where the template files lie
+- `DEFAULT_TEMPLATE`: the default template; I will add the possibility to change template via frontmatter
+- `BIBTEX_FILE`: where the bibtex file is
+- `OPTIMIZE_IMAGES`: true/false; if you want to optimize your images. Optimization is done via dithering and resizing
+- `DITHER_COLORS`: the amount of colors an image should be reduced to
+- `RESIZE_DIMENSIONS`: the max width and height an image can have
 
 ## License
 Released and distributed under the [Anti-Capitalist Attribution Cooperative License](https://noroadhome.itch.io/acaclicense).
