@@ -1,5 +1,6 @@
 ---
 title: "Page"
+template: alternative
 ---
 # Page
 

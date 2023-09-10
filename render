@@ -9,10 +9,15 @@ OUTPUT_PATH="${OUTPUT_ABSOLUTE%/*}/"
 #echo "converting /var/repositories/jache.re/$file to $OUTPUT_ABSOLUTE"
 mkdir -p "$OUTPUT_PATH"
 
-# render html files and apply template
-# if file contains [@xyz] citations, apply bibtex file and cite-proc
 TEMPLATE_FILE="${DEFAULT_TEMPLATE_FILE}.html"
 
+if grep -q "template: " "$INPUT_DIR$INPUT_FILE" ; then
+	eval $(parse_yaml $file "FILE_")
+	TEMPLATE_FILE="$TEMPLATE_FILE_PATH$FILE_template.html"
+fi
+
+# render html files and apply template
+# if file contains [@xyz] citations, apply bibtex file and cite-proc
 if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
 	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE_PATH" --citeproc
 else
