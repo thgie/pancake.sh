@@ -19,9 +19,9 @@ fi
 # render html files and apply template
 # if file contains [@xyz] citations, apply bibtex file and cite-proc
 if grep -q "\[\@" "$INPUT_DIR$INPUT_FILE" ; then
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE_PATH" --citeproc
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown+gfm_auto_identifiers  -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE" --bibliography "$BIBTEX_FILE_PATH" --citeproc
 else
-	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE"
+	pandoc "$INPUT_DIR$INPUT_FILE" -f markdown+gfm_auto_identifiers  -o "$OUTPUT_ABSOLUTE" --template="$TEMPLATE_FILE"
 fi
 
 # replace the .md link to .html
