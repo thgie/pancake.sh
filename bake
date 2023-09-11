@@ -12,11 +12,11 @@ OUTPUT_DIR="tempdir/"
 eval $(parse_yaml "${INPUT_DIR}.bake")
 
 # assemble default template file path
-TEMPLATE_FILE_PATH="${INPUT_DIR}${TEMPLATE_DIR}/"
-DEFAULT_TEMPLATE_FILE="${TEMPLATE_FILE_PATH}${DEFAULT_TEMPLATE}"
+TEMPLATE_FILE_PATH="${INPUT_DIR}${FILES_TEMPLATES}/"
+DEFAULT_TEMPLATE_FILE="${TEMPLATE_FILE_PATH}${FILES_DEFAULT_TEMPLATE}"
 
 # assemble bibtext file path
-BIBTEX_FILE_PATH="${INPUT_DIR}${BIBTEX_FILE}"
+BIBTEX_FILE_PATH="${INPUT_DIR}${FILES_BIBTEX}"
 echo "$BIBTEX_FILE_PATH"
 
 # initiate deployment
@@ -28,7 +28,7 @@ echo "Starting deployment"
 echo "Backing up current branch"
 
 # move generated files to "pages" branch of INPUT_DIR repository and commit
-git -C "$INPUT_DIR" switch "$MAIN_BRANCH"
+git -C "$INPUT_DIR" switch "$BRANCHES_MAIN"
 git -C "$INPUT_DIR" add .
 git -C "$INPUT_DIR" commit -m "backup $NOW"
 git -C "$INPUT_DIR" push
@@ -59,65 +59,28 @@ echo "Syncing assets"
 rsync -au "${INPUT_DIR}assets/" "${OUTPUT_DIR}assets"
 
 # resizes and dithers copied images
-if [ "$OPTIMIZE_IMAGES" = true ] ; then
+if [ "$IMAGES_OPTIMIZE" = true ] ; then
 	echo "Dithering and resizing images"
-	find "$OUTPUT_DIR" -type f \( -name \*.png \) -exec mogrify -resize ${RESIZE_DIMENSIONS}x -dither FloydSteinberg -colors $DITHER_COLORS -format png -auto-orient {} \;
-	find "$OUTPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize ${RESIZE_DIMENSIONS}x -dither FloydSteinberg -colors $DITHER_COLORS -format png -auto-orient {} \; -exec rm {} \;
+	find "$OUTPUT_DIR" -type f \( -name \*.png \) -exec mogrify -resize ${IMAGES_DIMENSIONS}x -dither FloydSteinberg -colors $IMAGES_COLORS -format png -auto-orient {} \;
+	find "$OUTPUT_DIR" -type f \( -name \*.jpg -o -name \*.jpeg \) -exec mogrify -resize ${IMAGES_DIMENSIONS}x -dither FloydSteinberg -colors $IMAGES_COLORS -format png -auto-orient {} \; -exec rm {} \;
 fi
 
 # create rss feed
-if [ "$BLOG_RSS" = true ] ; then
-	
-	echo "creating feed xml"
-
-	FEED_FILE="${OUTPUT_DIR}feed.xml"
-	rm -fv $FEED_FILE
-	touch $FEED_FILE
-
-	echo """<?xml version='1.0' encoding='UTF-8' ?>
-	<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
-	<channel>
-	<title>$BLOG_TITLE</title>
-	<link>$BLOG_URL</link>
-	<description>$BLOG_DESCRIPTION</description>
-	<atom:link href='${BLOG_URL}/feed.xml' rel='self' type='application/rss+xml' />
-	""" > $FEED_FILE
-
-	find "$INPUT_DIR$BLOG_PATH" -name "*.md" | while read file ; do
-		echo "$file"
-
-		eval $(parse_yaml $file "POST_")
-
-		POST_URL=$BLOG_URL/${file/$INPUT_DIR/}
-		POST_URL=${POST_URL/\.md/.html/}
-
-		echo """<item>
-		<title>$POST_title</title>
-        <link>$POST_URL</link>
-        <pubDate>$POST_date</pubDate>
-        <description>$POST_description</description>
-        </item>""" >> $FEED_FILE
-
-	done
-
-	echo """</channel>
-	</rss>""" >> $FEED_FILE
-
-fi
+. ./rss
 
 # TODO the fuck is this?
 find "$OUTPUT_DIR" -type f -name '*.html-e' -delete
 
 # move generated files to "pages" branch of INPUT_DIR repository and commit
 echo "Deploying to pages branch"
-git -C "$INPUT_DIR" switch "$DEPLOY_BRANCH"
+git -C "$INPUT_DIR" switch "$BRANCHES_DEPLOY"
 rsync -a --delete --exclude=".*" "${OUTPUT_DIR}" "${INPUT_DIR}"
 
 git -C "$INPUT_DIR" add .
 git -C "$INPUT_DIR" commit -m "generated $NOW"
 git -C "$INPUT_DIR" push
 
-git -C "$INPUT_DIR" switch "$MAIN_BRANCH"
+git -C "$INPUT_DIR" switch "$BRANCHES_MAIN"
 
 # cleanup
 echo "Removing temporary directory"

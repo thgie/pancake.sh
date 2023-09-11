@@ -1,8 +1,17 @@
-MAIN_BRANCH: main
-DEPLOY_BRANCH: pages
-TEMPLATE_DIR: templates
-DEFAULT_TEMPLATE: default.html
-BIBTEX_FILE: assets/bibfile.bib
-OPTIMIZE_IMAGES: true
-DITHER_COLORS: 6
-RESIZE_DIMENSIONS: 960
+BRANCHES:
+  MAIN: main
+  DEPLOY: pages
+FILES:
+  TEMPLATES: assets
+  DEFAULT_TEMPLATE: default
+  BIBTEX: assets/bibfile.bib
+IMAGES:
+  OPTIMIZE: true
+  COLORS: 6
+  DIMENSIONS: 960
+BLOG:
+  RSS: true
+  PATH: journal
+  TITLE: Hello World
+  DESCRIPTION: Best Blog Ever
+  URL: "https://test-repository.net"

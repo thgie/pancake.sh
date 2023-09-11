@@ -31,7 +31,7 @@ sed -i -e "s/\.md/.html/g" "$OUTPUT_ABSOLUTE"
 ANCHOR_RELATIVE=$(echo "$OUTPUT_RELATIVE" | sed 's;/;\\/;g')
 sed -i -e "s/href=\"#/href=\"${ANCHOR_RELATIVE}.html#/g" "$OUTPUT_ABSOLUTE"
 
-if [ "$OPTIMIZE_IMAGES" = true ] ; then
+if [ "$IMAGES_OPTIMIZE" = true ] ; then
 	sed -i -e "s/.jpg/.png/g" "$OUTPUT_ABSOLUTE"
 	sed -i -e "s/.jpeg/.png/g" "$OUTPUT_ABSOLUTE"
 fi
