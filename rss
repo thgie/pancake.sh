@@ -18,8 +18,6 @@ if [ "$BLOG_RSS" = true ] ; then
 	""" > $FEED_FILE
 
 	find "$INPUT_DIR$BLOG_PATH" -name "*.md" | while read file ; do
-		echo "$file"
-
 		eval $(parse_yaml $file "POST_")
 
 		POST_URL=$BLOG_URL/${file/$INPUT_DIR/}
